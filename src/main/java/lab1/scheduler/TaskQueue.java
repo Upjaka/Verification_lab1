@@ -56,7 +56,7 @@ public class TaskQueue {
 
     public List<Task> getAllTasks() {
         List<Task> tasks = new LinkedList<>();
-        for (int i = 3; i != 0; i--) {
+        for (int i = 3; i >= 0; i--) {
             tasks.addAll(taskQueues[i]);
         }
         return tasks;
