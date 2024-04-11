@@ -49,12 +49,14 @@ public abstract class AbstractTask implements Task {
         return priority.ordinal();
     }
 
+    @Override
     public TaskState getState() {
         return state;
     }
 
-    public int getId() {
-        return id;
+    @Override
+    public int getProgress() {
+        return progress;
     }
 
     private static class TaskIdGenerator {

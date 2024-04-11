@@ -1,6 +1,7 @@
 package lab1.tasks;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,10 +10,10 @@ class BaseTaskTest {
 
     @BeforeEach
     void setUp() {
-        task = new BaseTask(TaskPriority.HIGHEST, 5);
+        task = new BaseTask(TaskPriority.LOW, 5);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void activate() {
         task.activate();
         assertEquals(TaskState.READY, task.getState());
@@ -29,7 +30,7 @@ class BaseTaskTest {
         }
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void start() {
         try {
             task.start();
@@ -46,7 +47,7 @@ class BaseTaskTest {
         }
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void preempt() {
         try {
             task.preempt();
@@ -64,7 +65,7 @@ class BaseTaskTest {
         assertEquals(TaskState.READY, task.getState());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void terminate() {
         try {
             task.terminate();
@@ -82,8 +83,34 @@ class BaseTaskTest {
         assertEquals(TaskState.SUSPENDED, task.getState());
     }
 
-//    @org.junit.jupiter.api.Test
-//    void run() {
-//
-//    }
+    @Test
+    void run() throws InterruptedException {
+        task = new BaseTask(TaskPriority.LOW, 3);
+        task.activate();
+        task.start();
+        Thread thread = new Thread(task);
+        thread.start();
+        Thread.sleep(100);
+        assertEquals(TaskState.RUNNING, task.getState());
+        assertEquals(1, task.getProgress());
+        Thread.sleep(200);
+        assertEquals(TaskState.RUNNING, task.getState());
+        assertEquals(2, task.getProgress());
+        Thread.sleep(200);
+        assertEquals(TaskState.RUNNING, task.getState());
+        assertEquals(3, task.getProgress());
+        Thread.sleep(200);
+        assertEquals(TaskState.SUSPENDED, task.getState());
+    }
+
+    @Test
+    void getPriority() {
+        assertEquals(0, task.getPriority());
+        task = new BaseTask(TaskPriority.MEDIUM, 3);
+        assertEquals(1, task.getPriority());
+        task = new BaseTask(TaskPriority.HIGH, 3);
+        assertEquals(2, task.getPriority());
+        task = new BaseTask(TaskPriority.HIGHEST, 3);
+        assertEquals(3, task.getPriority());
+    }
 }

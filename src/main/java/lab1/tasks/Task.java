@@ -12,4 +12,6 @@ public interface Task extends Runnable {
     int getPriority();
 
     TaskState getState();
+
+    int getProgress();
 }

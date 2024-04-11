@@ -13,7 +13,7 @@ class ExtendedTaskTest {
         task = new ExtendedTask(TaskPriority.HIGHEST, 5, 3, 0);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void activate() {
         task.activate();
         assertEquals(TaskState.READY, task.getState());
@@ -36,7 +36,7 @@ class ExtendedTaskTest {
         }
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void start() {
         try {
             task.start();
@@ -59,7 +59,7 @@ class ExtendedTaskTest {
         }
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void preempt() {
         try {
             task.preempt();
@@ -84,7 +84,7 @@ class ExtendedTaskTest {
         }
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void terminate() {
         try {
             task.terminate();
@@ -157,7 +157,28 @@ class ExtendedTaskTest {
         assertEquals(TaskState.READY, task.getState());
     }
 
-//    @Test
-//    void run() {
-//    }
+    @Test
+    void run() throws InterruptedException {
+        task = new ExtendedTask(TaskPriority.LOW, 3, 2, 1);
+        task.activate();
+        task.start();
+        Thread thread = new Thread(task);
+        thread.start();
+        Thread.sleep(100);
+        assertEquals(TaskState.RUNNING, task.getState());
+        assertEquals(1, task.getProgress());
+        Thread.sleep(200);
+        assertEquals(TaskState.RUNNING, task.getState());
+        assertEquals(2, task.getProgress());
+        Thread.sleep(200);
+        assertEquals(TaskState.WAITING, task.getState());
+        Thread.sleep(200);
+        assertEquals(TaskState.READY, task.getState());
+        task.start();
+        Thread.sleep(100);
+        assertEquals(TaskState.RUNNING, task.getState());
+        assertEquals(3, task.getProgress());
+        Thread.sleep(200);
+        assertEquals(TaskState.SUSPENDED, task.getState());
+    }
 }
